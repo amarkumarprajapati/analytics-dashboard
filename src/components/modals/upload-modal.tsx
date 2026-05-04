@@ -25,7 +25,7 @@ export function UploadModal({ isOpen, onClose, onFileSelect }: UploadModalProps)
           <div className="rounded-xl border bg-muted/50 p-3">
             <h3 className="font-semibold mb-1 text-sm">Supported Formats</h3>
             <p className="text-xs text-muted-foreground">
-              Excel (.xlsx, .xls) and PDF files up to 10MB
+              Excel, CSV, PDF, code files, text, JSON and more
             </p>
           </div>
           <div className="rounded-xl border bg-muted/50 p-3">
@@ -35,9 +35,9 @@ export function UploadModal({ isOpen, onClose, onFileSelect }: UploadModalProps)
             </p>
           </div>
           <div className="rounded-xl border bg-muted/50 p-3">
-            <h3 className="font-semibold mb-1 text-sm">Secure & Private</h3>
+            <h3 className="font-semibold mb-1 text-sm">Local Processing</h3>
             <p className="text-xs text-muted-foreground">
-              Your data is encrypted and never shared
+              Your data stays in your browser, never stored on servers
             </p>
           </div>
         </div>

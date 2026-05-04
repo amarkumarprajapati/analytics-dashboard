@@ -9,10 +9,11 @@ interface AnalyzingLoaderProps {
 }
 
 const loadingSteps = [
-  { icon: FileSearch, text: "Extracting insights...", threshold: 25 },
-  { icon: Brain, text: "Processing with AI...", threshold: 50 },
-  { icon: ChartBar, text: "Generating visual summary...", threshold: 75 },
-  { icon: CheckCircle2, text: "Almost done...", threshold: 95 },
+  { icon: Loader2, text: "Uploading document...", threshold: 15 },
+  { icon: FileSearch, text: "Extracting insights...", threshold: 35 },
+  { icon: Brain, text: "Processing with AI...", threshold: 60 },
+  { icon: ChartBar, text: "Generating visual summary...", threshold: 85 },
+  { icon: CheckCircle2, text: "Almost done...", threshold: 100 },
 ];
 
 export function AnalyzingLoader({ progress }: AnalyzingLoaderProps) {
@@ -28,7 +29,7 @@ export function AnalyzingLoader({ progress }: AnalyzingLoaderProps) {
   const CurrentIcon = loadingSteps[currentStep].icon;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

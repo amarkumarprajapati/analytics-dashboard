@@ -18,13 +18,13 @@ export function WelcomeTour({ isOpen, onClose }: WelcomeTourProps) {
       title: "Welcome to Analytics Hub!",
       description: "Let's take a quick tour to help you get started with analyzing your data.",
       icon: BarChart3,
-      color: "from-blue-500 to-purple-500",
+      color: "from-sky-500 to-blue-600",
     },
     {
       title: "Upload Your Files",
       description: "Click the Upload button in the top bar to upload Excel, CSV, or PDF files for analysis.",
       icon: Upload,
-      color: "from-green-500 to-teal-500",
+      color: "from-emerald-500 to-cyan-500",
     },
     {
       title: "View Analytics",
@@ -36,13 +36,13 @@ export function WelcomeTour({ isOpen, onClose }: WelcomeTourProps) {
       title: "Generate Reports",
       description: "Access the Reports section to generate and download comprehensive reports of your analysis.",
       icon: FileText,
-      color: "from-purple-500 to-pink-500",
+      color: "from-blue-500 to-sky-400",
     },
     {
       title: "Customize Settings",
       description: "Adjust your preferences, theme, and other settings to personalize your experience.",
       icon: Settings,
-      color: "from-indigo-500 to-blue-500",
+      color: "from-slate-500 to-blue-500",
     },
   ];
 

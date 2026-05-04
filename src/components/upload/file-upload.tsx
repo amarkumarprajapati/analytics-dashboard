@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Upload, FileSpreadsheet, FileText, X, CheckCircle2 } from "lucide-react";
+import { Upload, FileSpreadsheet, FileText, FileCode, X, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,31 +12,65 @@ interface FileUploadProps {
   onUploadClick?: () => void;
 }
 
+const ACCEPTED_EXTENSIONS: Record<string, string[]> = {
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+  'application/vnd.ms-excel': ['.xls'],
+  'text/csv': ['.csv'],
+  'application/pdf': ['.pdf'],
+  'text/plain': ['.txt', '.log', '.md'],
+  'application/json': ['.json'],
+  'text/javascript': ['.js', '.jsx'],
+  'text/typescript': ['.ts', '.tsx'],
+  'text/x-python': ['.py'],
+  'text/html': ['.html'],
+  'text/css': ['.css'],
+  'text/x-java-source': ['.java'],
+  'text/x-c': ['.c', '.cpp', '.h'],
+  'text/x-csharp': ['.cs'],
+  'text/x-go': ['.go'],
+  'text/x-rustsrc': ['.rs'],
+  'text/x-ruby': ['.rb'],
+  'application/x-httpd-php': ['.php'],
+  'application/xml': ['.xml'],
+  'application/sql': ['.sql'],
+};
+
+const getFileIcon = (file: File) => {
+  const ext = file.name.split('.').pop()?.toLowerCase();
+  const codeExts = ['js', 'ts', 'tsx', 'jsx', 'py', 'java', 'cpp', 'c', 'cs', 'go', 'rs', 'rb', 'php', 'html', 'css', 'json', 'xml', 'sql'];
+  const dataExts = ['xlsx', 'xls', 'csv'];
+  
+  if (codeExts.includes(ext || '')) return <FileCode className="h-10 w-10 text-blue-500" />;
+  if (dataExts.includes(ext || '')) return <FileSpreadsheet className="h-10 w-10 text-green-500" />;
+  if (ext === 'pdf') return <FileText className="h-10 w-10 text-red-500" />;
+  return <FileText className="h-10 w-10 text-muted-foreground" />;
+};
+
 export function FileUpload({ onFileSelect, onUploadClick }: FileUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string>("");
-  const [showUpload, setShowUpload] = useState(false);
+
   const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
     setError("");
 
     if (rejectedFiles.length > 0) {
-      setError("Please upload only .xlsx, .xls, or .pdf files");
+      setError("Unsupported file type. Try xlsx, csv, pdf, txt, json, or code files.");
       return;
     }
 
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
+      if (file.size > 50 * 1024 * 1024) {
+        setError("File is too large. Maximum size is 50MB.");
+        return;
+      }
       setSelectedFile(file);
     }
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
-      'application/vnd.ms-excel': ['.xls'],
-      'application/pdf': ['.pdf'],
-    },
+    accept: ACCEPTED_EXTENSIONS,
     maxFiles: 1,
   });
 
@@ -57,10 +91,6 @@ export function FileUpload({ onFileSelect, onUploadClick }: FileUploadProps) {
     setError("");
   };
 
-    const handleNewUpload = () => {
-    setShowUpload(true);
-  };
-
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4">
       {/* Drop Zone */}
@@ -68,11 +98,8 @@ export function FileUpload({ onFileSelect, onUploadClick }: FileUploadProps) {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3 }}
-        // onClick={onUploadClick}
-         onClick={() => setShowUpload(true)}
       >
         <div
-         onClick={() => setShowUpload(true)}
           {...getRootProps()}
           className={cn(
             "relative rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer overflow-hidden",
@@ -114,12 +141,12 @@ export function FileUpload({ onFileSelect, onUploadClick }: FileUploadProps) {
                 : "Drag and drop or click to browse"}
             </p>
 
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <FileSpreadsheet className="h-4 w-4" />
-              <span>.xlsx, .xls</span>
+            <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground flex-wrap">
+              <span className="flex items-center gap-1"><FileSpreadsheet className="h-3.5 w-3.5" /> xlsx, csv</span>
               <span>•</span>
-              <FileText className="h-4 w-4" />
-              <span>.pdf</span>
+              <span className="flex items-center gap-1"><FileText className="h-3.5 w-3.5" /> pdf, txt</span>
+              <span>•</span>
+              <span className="flex items-center gap-1"><FileCode className="h-3.5 w-3.5" /> js, py, json +more</span>
             </div>
           </div>
         </div>
@@ -151,16 +178,12 @@ export function FileUpload({ onFileSelect, onUploadClick }: FileUploadProps) {
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-3 flex-1">
                 <div className="mt-1">
-                  {selectedFile.type.includes('pdf') ? (
-                    <FileText className="h-10 w-10 text-red-500" />
-                  ) : (
-                    <FileSpreadsheet className="h-10 w-10 text-green-500" />
-                  )}
+                  {getFileIcon(selectedFile)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium truncate">{selectedFile.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {formatFileSize(selectedFile.size)} • {selectedFile.type.split('/')[1].toUpperCase()}
+                    {formatFileSize(selectedFile.size)} • {selectedFile.name.split('.').pop()?.toUpperCase()}
                   </p>
                 </div>
               </div>

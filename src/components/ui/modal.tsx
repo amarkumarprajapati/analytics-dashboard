@@ -23,31 +23,35 @@ export function Modal({ isOpen, onClose, title, children, hideCloseButton = fals
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={hideCloseButton ? undefined : onClose}
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/20 dark:bg-black/80 backdrop-blur-[2px] z-50"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl"
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
           >
-            <div className="rounded-2xl border bg-white dark:bg-gray-900 shadow-2xl">
+            <div 
+              className="relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-[2.5rem] border border-border bg-white dark:bg-black text-black dark:text-white shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
               {!hideHeader && (
-                <div className="flex items-center justify-between border-b px-6 py-4">
-                  <h2 className="text-xl font-semibold">{title}</h2>
+                <div className="flex items-center justify-between border-b border-border px-8 py-6 shrink-0 bg-white dark:bg-black">
+                  <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
                   {!hideCloseButton && (
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={onClose}
-                      className="rounded-full"
+                      className="rounded-2xl h-11 w-11 hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300 active:scale-95"
                     >
-                      <X className="h-5 w-5" />
+                      <X className="h-6 w-6" />
                     </Button>
                   )}
                 </div>
               )}
-              <div className="p-6 max-h-[70vh] overflow-auto">
+              <div className="flex-1 overflow-y-auto p-8 custom-scrollbar bg-white dark:bg-black">
                 {children}
               </div>
             </div>
