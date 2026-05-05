@@ -34,7 +34,7 @@ export const useAppStore = create<AppState>()(
       currentFile: null,
       isAnalyzing: false,
       analysisProgress: 0,
-      geminiApiKey: 'AIzaSyANiNmSPWX06AhKAEJ7-6-UYnzU1eh8Fmk',
+      geminiApiKey: '',
       toggleTheme: () =>
         set((state) => ({
           theme: state.theme === 'light' ? 'dark' : 'light',
